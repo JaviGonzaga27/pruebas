@@ -7,9 +7,16 @@ RewriteRule ^(.*)$ index.php [L,QSA]
 
 # Proteger contra acceso directo a archivos sensibles
 <FilesMatch "\.(htaccess|htpasswd|ini|log|sh|sql)$">
-    Order Allow,Deny
+    Order Deny,Allow
     Deny from all
 </FilesMatch>
 
 # Prevenir acceso a directorios
 Options -Indexes
+
+# Agregar seguridad adicional
+# Deshabilitar información del servidor
+ServerSignature Off
+
+# Prevenir clickjacking
+Header always append X-Frame-Options SAMEORIGIN
