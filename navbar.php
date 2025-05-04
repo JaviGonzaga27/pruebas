@@ -1,81 +1,116 @@
 <?php
-// sidebar.php - Sidebar refactorizado y limpio
+// sidebar.php - Sidebar optimizado para taller mecánico
 
-// Verificar que la sesión esté iniciada
+// Verificar sesión
 if (!isset($_SESSION['usuario_rol'])) {
     $usuario_rol = 'guest';
 } else {
     $usuario_rol = $_SESSION['usuario_rol'];
 }
 
-// Función para determinar si un item del menú está activo
+// Función para determinar si un item está activo
 function isActive($currentPage, $menuItemPages) {
     return in_array($currentPage, $menuItemPages) ? 'active' : '';
 }
 
-// Obtener la página actual
+// Obtener página actual
 $pagina_actual = basename($_SERVER['PHP_SELF']);
-
-// Configurar rutas base
 $base_path = '/mecanica2/';
 
-// Configurar los items del menú según el rol del usuario
+// Configuración del menú por roles
 $menu_items = [];
 
-// Dashboard - disponible para todos
+// 1. DASHBOARD (Para todos los roles)
 $menu_items[] = [
     'id' => 'dashboard',
     'icon' => 'fas fa-home',
     'text' => 'Inicio',
     'items' => [
-        ['link' => $base_path . 'index.php', 'text' => 'Gráficas', 'page' => 'index.php']
+        ['link' => $base_path . 'index.php', 'text' => 'Panel Principal', 'page' => 'index.php']
     ]
 ];
 
-// Inventario - disponible para admin, almacen
-if (in_array($usuario_rol, ['admin', 'almacen'])) {
+// 2. OPERACIONES DEL TALLER (admin, asesor, mecanico)
+if (in_array($usuario_rol, ['admin', 'asesor', 'mecanico'])) {
     $menu_items[] = [
-        'id' => 'inventario',
-        'icon' => 'fas fa-dolly',
-        'text' => 'Inventario',
-        'items' => [
-            ['link' => $base_path . 'inventario/proveedor.php', 'text' => 'Proveedor', 'page' => 'proveedor.php'],
-            ['link' => $base_path . 'inventario/categoria.php', 'text' => 'Categorías', 'page' => 'categoria.php'],
-            ['link' => $base_path . 'inventario/productos.php', 'text' => 'Productos', 'page' => 'productos.php']
-        ]
+        'id' => 'taller',
+        'icon' => 'fas fa-tools',
+        'text' => 'Operaciones',
+        'items' => array_filter([
+            in_array($usuario_rol, ['admin', 'asesor']) ? 
+                ['link' => $base_path . 'taller/reparaciones.php', 'text' => 'Reparaciones', 'page' => 'reparaciones.php'] : null,
+            in_array($usuario_rol, ['admin', 'asesor']) ? 
+                ['link' => $base_path . 'taller/ordenes.php', 'text' => 'Órdenes de Trabajo', 'page' => 'ordenes.php'] : null,
+            ($usuario_rol === 'mecanico') ? 
+                ['link' => $base_path . 'taller/mis-reparaciones.php', 'text' => 'Mis Reparaciones', 'page' => 'mis-reparaciones.php'] : null,
+            ['link' => $base_path . 'taller/servicios.php', 'text' => 'Servicios', 'page' => 'servicios.php']
+        ])
     ];
 }
 
-// Admin - solo para admin
-if ($usuario_rol === 'admin') {
-    $menu_items[] = [
-        'id' => 'admin',
-        'icon' => 'fas fa-dollar-sign',
-        'text' => 'Admin',
-        'items' => [
-            ['link' => $base_path . 'admin/compras.php', 'text' => 'Compras', 'page' => 'compras.php'],
-            ['link' => $base_path . 'admin/ventas.php', 'text' => 'Ventas', 'page' => 'ventas.php']
-        ]
-    ];
-}
-
-// Clientes - disponible para admin, asesor
+// 3. CLIENTES Y VEHÍCULOS (admin, asesor)
 if (in_array($usuario_rol, ['admin', 'asesor'])) {
     $menu_items[] = [
         'id' => 'clientes',
-        'icon' => 'fas fa-user-plus',
+        'icon' => 'fas fa-users',
         'text' => 'Clientes',
         'items' => [
-            ['link' => $base_path . 'users/clientes.php', 'text' => 'Clientes', 'page' => 'clientes.php'],
-            ['link' => $base_path . 'users/vehiculo.php', 'text' => 'Vehículos', 'page' => 'vehiculo.php']
+            ['link' => $base_path . 'clientes/lista.php', 'text' => 'Gestión de Clientes', 'page' => 'lista.php'],
+            ['link' => $base_path . 'clientes/vehiculos.php', 'text' => 'Vehículos', 'page' => 'vehiculos.php'],
+            ['link' => $base_path . 'clientes/historial.php', 'text' => 'Historial de Servicios', 'page' => 'historial.php']
         ]
     ];
 }
 
-// Función para determinar si un grupo está activo
+// 4. INVENTARIO (admin, almacen)
+if (in_array($usuario_rol, ['admin', 'almacen'])) {
+    $menu_items[] = [
+        'id' => 'inventario',
+        'icon' => 'fas fa-boxes',
+        'text' => 'Inventario',
+        'items' => array_filter([
+            ['link' => $base_path . 'inventario/productos.php', 'text' => 'Productos', 'page' => 'productos.php'],
+            ['link' => $base_path . 'inventario/categorias.php', 'text' => 'Categorías', 'page' => 'categorias.php'],
+            ['link' => $base_path . 'inventario/movimientos.php', 'text' => 'Movimientos', 'page' => 'movimientos.php'],
+            ($usuario_rol === 'admin') ? 
+                ['link' => $base_path . 'inventario/proveedores.php', 'text' => 'Proveedores', 'page' => 'proveedores.php'] : null
+        ])
+    ];
+}
+
+// 5. VENTAS Y COMPRAS (admin, cajero)
+if (in_array($usuario_rol, ['admin', 'cajero'])) {
+    $menu_items[] = [
+        'id' => 'finanzas',
+        'icon' => 'fas fa-cash-register',
+        'text' => 'Finanzas',
+        'items' => array_filter([
+            ['link' => $base_path . 'finanzas/ventas.php', 'text' => 'Ventas', 'page' => 'ventas.php'],
+            ($usuario_rol === 'admin') ? 
+                ['link' => $base_path . 'finanzas/compras.php', 'text' => 'Compras', 'page' => 'compras.php'] : null,
+            ['link' => $base_path . 'finanzas/reportes.php', 'text' => 'Reportes', 'page' => 'reportes.php']
+        ])
+    ];
+}
+
+// 6. ADMINISTRACIÓN (solo admin)
+if ($usuario_rol === 'admin') {
+    $menu_items[] = [
+        'id' => 'admin',
+        'icon' => 'fas fa-cog',
+        'text' => 'Administración',
+        'items' => [
+            ['link' => $base_path . 'admin/usuarios.php', 'text' => 'Usuarios', 'page' => 'usuarios.php'],
+            ['link' => $base_path . 'admin/configuracion.php', 'text' => 'Configuración', 'page' => 'configuracion.php'],
+            ['link' => $base_path . 'admin/backup.php', 'text' => 'Respaldo', 'page' => 'backup.php']
+        ]
+    ];
+}
+
+// Función para verificar si un grupo está activo
 function isGroupActive($items, $currentPage) {
     foreach ($items as $item) {
-        if ($item['page'] === $currentPage) {
+        if ($item && $item['page'] === $currentPage) {
             return true;
         }
     }
@@ -86,48 +121,47 @@ function isGroupActive($items, $currentPage) {
 <!-- Sidebar -->
 <div class="sidebar" data-background-color="dark">
     <div class="sidebar-logo">
-        <!-- Logo Header -->
         <div class="logo-header" data-background-color="dark">
             <a href="<?= $base_path ?>index.php" class="logo">
-                <img src="<?= $base_path ?>assets/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20">
+                <img src="<?= $base_path ?>assets/img/logo_taller.png" alt="Logo Taller" class="navbar-brand" height="30">
+                <span class="logo-text">Mecánica Pro</span>
             </a>
             <div class="nav-toggle">
                 <button class="btn btn-toggle toggle-sidebar">
-                    <i class="gg-menu-right"></i>
-                </button>
-                <button class="btn btn-toggle sidenav-toggler">
-                    <i class="gg-menu-left"></i>
+                    <i class="fas fa-bars"></i>
                 </button>
             </div>
-            <button class="topbar-toggler more">
-                <i class="gg-more-vertical-alt"></i>
-            </button>
         </div>
-        <!-- End Logo Header -->
     </div>
     
     <div class="sidebar-wrapper scrollbar scrollbar-inner">
         <div class="sidebar-content">
             <ul class="nav nav-secondary">
                 <?php foreach ($menu_items as $menu): ?>
-                    <li class="nav-item <?= isGroupActive($menu['items'], $pagina_actual) ? 'active' : '' ?>">
-                        <a data-bs-toggle="collapse" href="#<?= $menu['id'] ?>" class="<?= isGroupActive($menu['items'], $pagina_actual) ? '' : 'collapsed' ?>" aria-expanded="<?= isGroupActive($menu['items'], $pagina_actual) ? 'true' : 'false' ?>">
-                            <i class="<?= $menu['icon'] ?>"></i>
-                            <p><?= $menu['text'] ?></p>
-                            <span class="caret"></span>
-                        </a>
-                        <div class="collapse <?= isGroupActive($menu['items'], $pagina_actual) ? 'show' : '' ?>" id="<?= $menu['id'] ?>">
-                            <ul class="nav nav-collapse">
-                                <?php foreach ($menu['items'] as $item): ?>
-                                    <li class="<?= isActive($pagina_actual, [$item['page']]) ?>">
-                                        <a href="<?= $item['link'] ?>">
-                                            <span class="sub-item"><?= $item['text'] ?></span>
-                                        </a>
-                                    </li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </div>
-                    </li>
+                    <?php if (!empty($menu['items'])): ?>
+                        <li class="nav-item <?= isGroupActive($menu['items'], $pagina_actual) ? 'active' : '' ?>">
+                            <a data-bs-toggle="collapse" href="#<?= $menu['id'] ?>" 
+                               class="<?= isGroupActive($menu['items'], $pagina_actual) ? '' : 'collapsed' ?>" 
+                               aria-expanded="<?= isGroupActive($menu['items'], $pagina_actual) ? 'true' : 'false' ?>">
+                                <i class="<?= $menu['icon'] ?>"></i>
+                                <p><?= $menu['text'] ?></p>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="collapse <?= isGroupActive($menu['items'], $pagina_actual) ? 'show' : '' ?>" id="<?= $menu['id'] ?>">
+                                <ul class="nav nav-collapse">
+                                    <?php foreach ($menu['items'] as $item): ?>
+                                        <?php if ($item): ?>
+                                            <li class="<?= isActive($pagina_actual, [$item['page']]) ?>">
+                                                <a href="<?= $item['link'] ?>">
+                                                    <span class="sub-item"><?= $item['text'] ?></span>
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div>
+                        </li>
+                    <?php endif; ?>
                 <?php endforeach; ?>
             </ul>
         </div>
