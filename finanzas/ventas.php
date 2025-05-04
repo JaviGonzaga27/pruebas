@@ -138,13 +138,15 @@ include '../includes/template.php';
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Porcentaje de IVA</label>
-                                    <input type="number" step="0.01" class="form-control" id="porcentajeIVA" value="15.00" min="0">
+                                    <input type="number" step="0.01" class="form-control" id="porcentajeIVA"
+                                        value="15.00" min="0">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Descuento General (%)</label>
-                                    <input type="number" class="form-control" id="descuentoGeneral" min="0" max="100" value="0">
+                                    <input type="number" class="form-control" id="descuentoGeneral" min="0" max="100"
+                                        value="0">
                                 </div>
                             </div>
                         </div>
@@ -175,7 +177,8 @@ include '../includes/template.php';
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>Descuento (%)</label>
-                                <input type="number" class="form-control" id="descuentoProducto" min="0" max="100" value="0">
+                                <input type="number" class="form-control" id="descuentoProducto" min="0" max="100"
+                                    value="0">
                             </div>
                         </div>
                         <div class="col-md-2 d-flex align-items-end">
@@ -197,7 +200,8 @@ include '../includes/template.php';
                                 <div class="row">
                                     <div class="col-md-6">
                                         <h5>Subtotal: <span id="subtotalVenta">$0.00</span></h5>
-                                        <h5>IVA (<span id="porcentajeIVALabel">15.00</span>%): <span id="ivaVenta">$0.00</span></h5>
+                                        <h5>IVA (<span id="porcentajeIVALabel">15.00</span>%): <span
+                                                id="ivaVenta">$0.00</span></h5>
                                         <h5>Total antes de descuento: <span id="totalAntesDescuento">$0.00</span></h5>
                                         <h5>Descuento general: <span id="descuentoGeneralVenta">0%</span></h5>
                                     </div>
@@ -264,7 +268,7 @@ include '../includes/template.php';
                             <strong>Descuento general:</strong> <span id="detalleDescuentoGeneral"></span>
                         </div>
                     </div>
-                    
+
                     <div class="table-responsive">
                         <table id="detalleVentaTable" class="table">
                             <thead>
@@ -279,7 +283,7 @@ include '../includes/template.php';
                             <tbody></tbody>
                         </table>
                     </div>
-                    
+
                     <div class="total-container mt-3">
                         <div class="row">
                             <div class="col-md-6">

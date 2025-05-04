@@ -25,6 +25,11 @@ const validationsEcu = {
 
 // Inicializar DataTable
 function initDataTable() {
+    // Destruir si ya existe
+    if (comprasTable) {
+        comprasTable.destroy();
+        $('#comprasTable').empty(); // Limpiar contenido
+    }
     comprasTable = $('#comprasTable').DataTable({
         ajax: {
             url: 'crud_compras.php?action=get_compras',
