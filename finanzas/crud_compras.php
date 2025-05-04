@@ -121,8 +121,12 @@ function getDetalleCompra() {
     $compraID = $_GET['compraID'] ?? null;
 
     try {
-        // Obtener información básica de la compra
-        $sql = "SELECT c.*, p.Nombre as ProveedorNombre, u.Nombre as UsuarioNombre
+        if (!$compraID || !is_numeric($compraID)) {
+            throw new Exception("ID de compra no válido");
+        }
+
+        // Obtener información básica de la compra con validación
+        $sql = "SELECT c.*, p.Nombre as ProveedorNombre, p.RUC, u.Nombre as UsuarioNombre
                 FROM compras c
                 JOIN proveedores p ON c.RUC = p.RUC
                 JOIN usuarios u ON c.UsuarioID = u.UsuarioID
@@ -135,7 +139,7 @@ function getDetalleCompra() {
             throw new Exception("Compra no encontrada");
         }
         
-        // Obtener detalles de los productos
+        // Obtener detalles de los productos con validación
         $sql = "SELECT d.*, p.Nombre as ProductoNombre, p.CodigoBarras, p.marca
                 FROM detallecompra d
                 JOIN productos p ON d.ProductoID = p.ProductoID
@@ -144,9 +148,35 @@ function getDetalleCompra() {
         $stmt->execute([':compraID' => $compraID]);
         $detalles = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
+        // Validar que los detalles sean un array
+        if (!is_array($detalles)) {
+            $detalles = [];
+        }
+
+        // Asegurar que todos los campos necesarios existan en cada detalle
+        $detalles = array_map(function($detalle) {
+            return [
+                'ProductoID' => $detalle['ProductoID'] ?? null,
+                'ProductoNombre' => $detalle['ProductoNombre'] ?? 'Producto no disponible',
+                'Cantidad' => $detalle['Cantidad'] ?? 0,
+                'PrecioUnitario' => $detalle['PrecioUnitario'] ?? 0,
+                'CodigoBarras' => $detalle['CodigoBarras'] ?? null,
+                'marca' => $detalle['marca'] ?? null
+            ];
+        }, $detalles);
+
         echo json_encode([
             'success' => true,
-            'compra' => $compra,
+            'compra' => [
+                'CompraID' => $compra['CompraID'],
+                'RUC' => $compra['RUC'],
+                'NumeroFactura' => $compra['NumeroFactura'],
+                'FechaCompra' => $compra['FechaCompra'],
+                'TotalCompra' => $compra['TotalCompra'],
+                'UsuarioID' => $compra['UsuarioID'],
+                'ProveedorNombre' => $compra['ProveedorNombre'],
+                'UsuarioNombre' => $compra['UsuarioNombre']
+            ],
             'detalles' => $detalles
         ]);
     } catch (Exception $e) {
@@ -156,7 +186,6 @@ function getDetalleCompra() {
         ]);
     }
 }
-
 function getProveedores() {
     global $conn;
 
