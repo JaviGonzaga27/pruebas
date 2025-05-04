@@ -1,5 +1,16 @@
 <?php
 // includes/footer.php - Footer refactorizado
+
+// Información configurable
+$footer_info = [
+    'company' => 'NAVETECH',
+    'company_url' => 'https://navetech.com',
+    'developer' => 'Ing: Esteban Loachamin',
+    'developer_url' => 'https://navetech.com',
+    'distributor' => 'Nave Tech',
+    'distributor_url' => 'https://navetech.com'
+];
+
 $current_year = date('Y');
 ?>
 

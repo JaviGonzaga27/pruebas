@@ -55,7 +55,7 @@ if (in_array($usuario_rol, ['admin', 'asesor'])) {
         'icon' => 'fas fa-users',
         'text' => 'Clientes',
         'items' => [
-            ['link' => $base_path . 'clientes/lista.php', 'text' => 'Gestión de Clientes', 'page' => 'lista.php'],
+            ['link' => $base_path . 'clientes/clientes.php', 'text' => 'Gestión de Clientes', 'page' => 'lista.php'],
             ['link' => $base_path . 'clientes/vehiculos.php', 'text' => 'Vehículos', 'page' => 'vehiculos.php'],
             ['link' => $base_path . 'clientes/historial.php', 'text' => 'Historial de Servicios', 'page' => 'historial.php']
         ]

@@ -68,14 +68,6 @@ function crearCompra() {
                     ':cantidad' => $producto['cantidad'],
                     ':precio' => $producto['precio']
                 ]);
-                
-                // Actualizar stock
-                $sql = "UPDATE productos SET Stock = Stock + :cantidad WHERE ProductoID = :productoID";
-                $stmt = $conn->prepare($sql);
-                $stmt->execute([
-                    ':cantidad' => $producto['cantidad'],
-                    ':productoID' => $producto['productoID']
-                ]);
             }
             
             // Manejar plazos si es compra a plazos

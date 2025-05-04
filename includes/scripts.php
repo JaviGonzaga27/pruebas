@@ -1,51 +1,41 @@
 <?php
-// includes/scripts.php - Scripts centralizados
+// includes/scripts.php - Scripts centralizados y optimizados
 $assets_path = $config['assets_path'] ?? '/mecanica2/assets/';
+
+// Definir scripts básicos que siempre se cargan
+$core_scripts = [
+    'js/core/jquery-3.7.1.min.js',
+    'js/core/popper.min.js',
+    'js/core/bootstrap.min.js',
+    'js/plugin/jquery-scrollbar/jquery.scrollbar.min.js',
+    'js/kaiadmin.min.js'
+];
+
+// Definir scripts que podrían cargarse condicionalmente
+$conditional_scripts = [
+    'chart' => 'js/plugin/chart.js/chart.min.js',
+    'sparkline' => 'js/plugin/jquery.sparkline/jquery.sparkline.min.js',
+    'datatables' => 'js/plugin/datatables/datatables.min.js',
+    'notify' => 'js/plugin/bootstrap-notify/bootstrap-notify.min.js',
+    'sweetalert' => 'js/plugin/sweetalert/sweetalert.min.js',
+    'maps' => [
+        'js/plugin/jsvectormap/jsvectormap.min.js',
+        'js/plugin/jsvectormap/world.js'
+    ]
+];
+
+// Lista de scripts específicos de la página
+$page_modules = $page_modules ?? [];
+
+// Establecer tiempo de expiración para cache (1 semana)
+$cache_expiry = 60 * 60 * 24 * 7;
+$version = '1.0.' . date('Ymd');
+
+// Función de compresión condicional
+function compressScriptUrl($url, $assets_path, $version) {
+    return $assets_path . $url . '?v=' . $version;
+}
 ?>
-
-<!-- Core JS Files -->
-<script src="<?= $assets_path ?>js/core/jquery-3.7.1.min.js"></script>
-<script src="<?= $assets_path ?>js/core/popper.min.js"></script>
-<script src="<?= $assets_path ?>js/core/bootstrap.min.js"></script>
-
-<!-- jQuery Scrollbar -->
-<script src="<?= $assets_path ?>js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
-
-<!-- Chart JS -->
-<script src="<?= $assets_path ?>js/plugin/chart.js/chart.min.js"></script>
-
-<!-- jQuery Sparkline -->
-<script src="<?= $assets_path ?>js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
-
-<!-- Chart Circle -->
-<script src="<?= $assets_path ?>js/plugin/chart-circle/circles.min.js"></script>
-
-<!-- Datatables -->
-<script src="<?= $assets_path ?>js/plugin/datatables/datatables.min.js"></script>
-
-<!-- Bootstrap Notify -->
-<script src="<?= $assets_path ?>js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
-
-<!-- jQuery Vector Maps -->
-<script src="<?= $assets_path ?>js/plugin/jsvectormap/jsvectormap.min.js"></script>
-<script src="<?= $assets_path ?>js/plugin/jsvectormap/world.js"></script>
-
-<!-- Sweet Alert -->
-<script src="<?= $assets_path ?>js/plugin/sweetalert/sweetalert.min.js"></script>
-
-<!-- Kaiadmin JS -->
-<script src="<?= $assets_path ?>js/kaiadmin.min.js"></script>
-
-<!-- Kaiadmin DEMO methods, don't include it in your project! -->
-<script src="<?= $assets_path ?>js/setting-demo.js"></script>
-<script src="<?= $assets_path ?>js/demo.js"></script>
-
-<!-- Page-specific scripts -->
-<?php if (isset($page_scripts) && is_array($page_scripts)): ?>
-    <?php foreach ($page_scripts as $script): ?>
-        <script src="<?= $assets_path ?>js/<?= $script ?>"></script>
-    <?php endforeach; ?>
-<?php endif; ?>
 
 <!-- Session check -->
 <script>

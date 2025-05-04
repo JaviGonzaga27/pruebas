@@ -106,14 +106,6 @@ function crearVenta() {
                     ':descuento' => $producto['descuentoProducto'] ?? 0
                 ]);
                 
-                // 6. Actualizar stock del producto
-                $sql = "UPDATE productos SET Stock = Stock - :cantidad WHERE ProductoID = :productoID";
-                $stmt = $conn->prepare($sql);
-                $stmt->execute([
-                    ':cantidad' => $producto['cantidad'],
-                    ':productoID' => $producto['productoID']
-                ]);
-                
                 // 7. Verificar stock bajo y actualizar estado
                 $sql = "SELECT Stock FROM productos WHERE ProductoID = :productoID";
                 $stmt = $conn->prepare($sql);

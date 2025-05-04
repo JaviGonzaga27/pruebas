@@ -1,5 +1,15 @@
 <?php
 // includes/head_assets.php - Assets del head centralizados
+
+// Definir una configuración por defecto
+if (!isset($config)) {
+    $config = [
+        'base_path' => '/mecanica2/',
+        'assets_path' => '/mecanica2/assets/',
+        'site_name' => 'Sistema de Taller Mecánico'
+    ];
+}
+
 $assets_path = $config['assets_path'] ?? '/mecanica2/assets/';
 ?>
 
