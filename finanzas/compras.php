@@ -2,7 +2,7 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . '/mecanica2/auth.php';
 
 // Configuración de la página
-$title = 'Registro de Ventas';
+$title = 'Registro de Compras';
 $config = [
     'base_path' => '/mecanica2/',
     'assets_path' => '/mecanica2/assets/',
@@ -35,21 +35,6 @@ $inline_css = "
     }
     .select2-container--default .select2-selection--single .select2-selection__arrow {
         height: 36px;
-    }
-    .plazo-item {
-        background-color: #f8f9fa;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-    }
-    .plazo-header {
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
-    .plazo-details {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
     }
     .loading-products {
         text-align: center;
@@ -202,7 +187,7 @@ include '../includes/template.php';
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Precio Unitario</label>
-                            <input type="number" step="0.01" class="form-control" id="precioUnitario">
+                            <input type="number" step="0.01" class="form-control" id="precioUnitario" required>
                         </div>
                     </div>
                     <div class="col-md-2 d-flex align-items-end">
@@ -240,81 +225,7 @@ include '../includes/template.php';
                             <p class="text-muted text-center">No hay productos agregados</p>
                         </div>
                         <div class="total-container">
-                            <h4 class="text-end">Total Compra (IVA incluido): <span id="totalCompra">$0.00</span></h4>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sección de Plazos -->
-                <div class="form-group form-check mb-3">
-                    <input type="checkbox" class="form-check-input" id="esPlazo">
-                    <label class="form-check-label" for="esPlazo">¿Es compra a plazos con el proveedor?</label>
-                </div>
-
-                <div class="card mb-4" id="seccionPlazos" style="display: none;">
-                    <div class="card-header">
-                        <h5 class="card-title">Condiciones de Pago a Plazos</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Fecha Primer Pago</label>
-                                    <input type="date" class="form-control" id="fechaPrimerPago">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Monto Primer Pago</label>
-                                    <input type="number" step="0.01" class="form-control" id="montoPrimerPago"
-                                        value="0">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>¿Dará abono inicial?</label>
-                                    <select class="form-control" id="abonoInicial">
-                                        <option value="0">No</option>
-                                        <option value="1">Sí</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="seccionAbonoInicial" style="display: none;">
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Monto Abono Inicial</label>
-                                        <input type="number" step="0.01" class="form-control" id="montoAbonoInicial"
-                                            value="0">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Fecha Abono Inicial</label>
-                                        <input type="date" class="form-control" id="fechaAbonoInicial">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label>Plazos Adicionales</label>
-                                    <div id="plazosContainer"></div>
-                                    <button type="button" id="agregarPlazoBtn" class="btn btn-sm btn-primary mt-2">
-                                        <i class="fas fa-plus"></i> Agregar Plazo
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Resumen de plazos -->
-                        <div class="mt-4">
-                            <h6>Resumen de Plazos</h6>
-                            <div id="resumenPlazos"></div>
+                            <h4 class="text-end">Total Compra: <span id="totalCompra">$0.00</span></h4>
                         </div>
                     </div>
                 </div>
@@ -343,7 +254,6 @@ include '../includes/template.php';
                             <th>Proveedor</th>
                             <th>Factura</th>
                             <th>Total</th>
-                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -377,9 +287,6 @@ include '../includes/template.php';
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <strong>Usuario:</strong> <span id="detalleUsuario"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <strong>Estado:</strong> <span id="detalleEstado"></span>
                         </div>
                     </div>
 
