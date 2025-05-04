@@ -34,7 +34,7 @@ $menu_items[] = [
 if (in_array($usuario_rol, ['admin', 'asesor', 'mecanico'])) {
     $menu_items[] = [
         'id' => 'taller',
-        'icon' => 'fas fa-tools',
+        'icon' => 'fas fa-car',
         'text' => 'Operaciones',
         'items' => array_filter([
             in_array($usuario_rol, ['admin', 'asesor']) ? 
@@ -82,7 +82,7 @@ if (in_array($usuario_rol, ['admin', 'almacen'])) {
 if (in_array($usuario_rol, ['admin', 'cajero'])) {
     $menu_items[] = [
         'id' => 'finanzas',
-        'icon' => 'fas fa-cash-register',
+        'icon' => 'fas fa-money-check-alt',
         'text' => 'Finanzas',
         'items' => array_filter([
             ['link' => $base_path . 'finanzas/ventas.php', 'text' => 'Ventas', 'page' => 'ventas.php'],
