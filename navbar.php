@@ -31,22 +31,22 @@ $menu_items[] = [
 ];
 
 // 2. OPERACIONES DEL TALLER (admin, asesor, mecanico)
-if (in_array($usuario_rol, ['admin', 'asesor', 'mecanico'])) {
-    $menu_items[] = [
-        'id' => 'taller',
-        'icon' => 'fas fa-car',
-        'text' => 'Operaciones',
-        'items' => array_filter([
-            in_array($usuario_rol, ['admin', 'asesor']) ? 
-                ['link' => $base_path . 'taller/reparaciones.php', 'text' => 'Reparaciones', 'page' => 'reparaciones.php'] : null,
-            in_array($usuario_rol, ['admin', 'asesor']) ? 
-                ['link' => $base_path . 'taller/ordenes.php', 'text' => 'Órdenes de Trabajo', 'page' => 'ordenes.php'] : null,
-            ($usuario_rol === 'mecanico') ? 
-                ['link' => $base_path . 'taller/mis-reparaciones.php', 'text' => 'Mis Reparaciones', 'page' => 'mis-reparaciones.php'] : null,
-            ['link' => $base_path . 'taller/servicios.php', 'text' => 'Servicios', 'page' => 'servicios.php']
-        ])
-    ];
-}
+//if (in_array($usuario_rol, ['admin', 'asesor', 'mecanico'])) {
+//    $menu_items[] = [
+//        'id' => 'taller',
+//        'icon' => 'fas fa-car',
+//        'text' => 'Operaciones',
+//        'items' => array_filter([
+//            in_array($usuario_rol, ['admin', 'asesor']) ? 
+//                ['link' => $base_path . 'taller/reparaciones.php', 'text' => 'Reparaciones', 'page' => 'reparaciones.php'] : null,
+//            in_array($usuario_rol, ['admin', 'asesor']) ? 
+//                ['link' => $base_path . 'taller/ordenes.php', 'text' => 'Órdenes de Trabajo', 'page' => 'ordenes.php'] : null,
+//            ($usuario_rol === 'mecanico') ? 
+//                ['link' => $base_path . 'taller/mis-reparaciones.php', 'text' => 'Mis Reparaciones', 'page' => 'mis-reparaciones.php'] : null,
+//            ['link' => $base_path . 'taller/servicios.php', 'text' => 'Servicios', 'page' => 'servicios.php']
+//        ])
+//    ];
+//}
 
 // 3. CLIENTES Y VEHÍCULOS (admin, asesor)
 if (in_array($usuario_rol, ['admin', 'asesor'])) {
@@ -57,7 +57,7 @@ if (in_array($usuario_rol, ['admin', 'asesor'])) {
         'items' => [
             ['link' => $base_path . 'clientes/clientes.php', 'text' => 'Gestión de Clientes', 'page' => 'lista.php'],
             ['link' => $base_path . 'clientes/vehiculos.php', 'text' => 'Vehículos', 'page' => 'vehiculos.php'],
-            ['link' => $base_path . 'clientes/historial.php', 'text' => 'Historial de Servicios', 'page' => 'historial.php']
+            //['link' => $base_path . 'clientes/historial.php', 'text' => 'Historial de Servicios', 'page' => 'historial.php']
         ]
     ];
 }
@@ -71,7 +71,7 @@ if (in_array($usuario_rol, ['admin', 'almacen'])) {
         'items' => array_filter([
             ['link' => $base_path . 'inventario/productos.php', 'text' => 'Productos', 'page' => 'productos.php'],
             ['link' => $base_path . 'inventario/categorias.php', 'text' => 'Categorías', 'page' => 'categorias.php'],
-            ['link' => $base_path . 'inventario/movimientos.php', 'text' => 'Movimientos', 'page' => 'movimientos.php'],
+            //['link' => $base_path . 'inventario/movimientos.php', 'text' => 'Movimientos', 'page' => 'movimientos.php'],
             ($usuario_rol === 'admin') ? 
                 ['link' => $base_path . 'inventario/proveedores.php', 'text' => 'Proveedores', 'page' => 'proveedores.php'] : null
         ])
@@ -88,7 +88,7 @@ if (in_array($usuario_rol, ['admin', 'cajero'])) {
             ['link' => $base_path . 'finanzas/ventas.php', 'text' => 'Ventas', 'page' => 'ventas.php'],
             ($usuario_rol === 'admin') ? 
                 ['link' => $base_path . 'finanzas/compras.php', 'text' => 'Compras', 'page' => 'compras.php'] : null,
-            ['link' => $base_path . 'finanzas/reportes.php', 'text' => 'Reportes', 'page' => 'reportes.php']
+            //['link' => $base_path . 'finanzas/reportes.php', 'text' => 'Reportes', 'page' => 'reportes.php']
         ])
     ];
 }
