@@ -461,6 +461,7 @@ function registrarCompra(compraData) {
 }
 
 // Función para ver detalle de compra
+// Función para ver detalle de compra - Versión corregida
 function verDetalleCompra(compraID) {
     $('#detalleCompraModal').modal('show');
     $('#detalleCompraID').text(compraID);
@@ -473,39 +474,60 @@ function verDetalleCompra(compraID) {
         method: 'GET',
         dataType: 'json',
         success: function(response) {
-            if (!response || !response.success) {
-                throw new Error(response?.error || "Respuesta inválida del servidor");
-            }
+            try {
+                // Verificar si la respuesta es válida
+                if (!response || !response.success) {
+                    throw new Error(response?.message || "Respuesta inválida del servidor");
+                }
 
-            const { compra, detalles } = response;
-            
-            $('#detalleProveedor').text(compra.ProveedorNombre + ' (' + compra.RUC + ')');
-            $('#detalleFactura').text(compra.NumeroFactura || 'N/A');
-            $('#detalleFecha').text(new Date(compra.FechaCompra).toLocaleDateString('es-ES'));
-            $('#detalleUsuario').text(compra.UsuarioNombre || 'Administrador');
-            
-            tbody.empty();
-            
-            if (!detalles || detalles.length === 0) {
-                tbody.append('<tr><td colspan="4" class="text-center text-muted">No se encontraron productos</td></tr>');
-            } else {
-                let subtotal = 0;
-                detalles.forEach(detalle => {
-                    const itemSubtotal = detalle.Cantidad * detalle.PrecioUnitario;
-                    subtotal += itemSubtotal;
-                    
-                    tbody.append(`
-                        <tr>
-                            <td>${detalle.ProductoNombre || 'Producto no disponible'}</td>
-                            <td>${detalle.Cantidad}</td>
-                            <td>$${detalle.PrecioUnitario.toFixed(2)}</td>
-                            <td>$${itemSubtotal.toFixed(2)}</td>
-                        </tr>
-                    `);
-                });
+                const { compra, detalles } = response;
                 
-                $('#detalleSubtotal').text('$' + subtotal.toFixed(2));
-                $('#detalleTotal').text('$' + compra.TotalCompra.toFixed(2));
+                // Verificar que los datos necesarios existan
+                if (!compra || !detalles) {
+                    throw new Error("Datos de compra incompletos");
+                }
+                
+                // Actualizar información básica de la compra
+                $('#detalleProveedor').text((compra.ProveedorNombre || 'N/A') + ' (' + (compra.RUC || 'N/A') + ')');
+                $('#detalleFactura').text(compra.NumeroFactura || 'N/A');
+                $('#detalleFecha').text(compra.FechaCompra ? new Date(compra.FechaCompra).toLocaleDateString('es-ES') : 'N/A');
+                $('#detalleUsuario').text(compra.UsuarioNombre || 'Administrador');
+                
+                tbody.empty();
+                
+                if (!Array.isArray(detalles) || detalles.length === 0) {
+                    tbody.append('<tr><td colspan="4" class="text-center text-muted">No se encontraron productos</td></tr>');
+                } else {
+                    let subtotal = 0;
+                    detalles.forEach(detalle => {
+                        // Validar datos del detalle
+                        const cantidad = parseFloat(detalle.Cantidad) || 0;
+                        const precioUnitario = parseFloat(detalle.PrecioUnitario) || 0;
+                        const itemSubtotal = cantidad * precioUnitario;
+                        subtotal += itemSubtotal;
+                        
+                        tbody.append(`
+                            <tr>
+                                <td>${detalle.ProductoNombre || 'Producto no disponible'}</td>
+                                <td>${cantidad}</td>
+                                <td>$${precioUnitario.toFixed(2)}</td>
+                                <td>$${itemSubtotal.toFixed(2)}</td>
+                            </tr>
+                        `);
+                    });
+                    
+                    $('#detalleSubtotal').text('$' + subtotal.toFixed(2));
+                    $('#detalleTotal').text('$' + (parseFloat(compra.TotalCompra) || 0).toFixed(2));
+                }
+            } catch (e) {
+                tbody.html(`
+                    <tr>
+                        <td colspan="4" class="text-center text-danger">
+                            Error al procesar los datos: ${e.message}
+                        </td>
+                    </tr>
+                `);
+                console.error('Error al procesar detalle:', e);
             }
         },
         error: function(xhr, status, error) {
@@ -516,6 +538,7 @@ function verDetalleCompra(compraID) {
                     </td>
                 </tr>
             `);
+            console.error('Error en la solicitud AJAX:', error);
         }
     });
 }
