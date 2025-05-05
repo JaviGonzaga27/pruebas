@@ -23,26 +23,27 @@ $pagina_actual = basename($_SERVER['PHP_SELF']);
 
 <!-- Sidebar -->
 <div class="sidebar sidebar-style-2" data-background-color="dark">
-    <div class="sidebar-logo">
-        <!-- Logo Header -->
-        <div class="logo-header" data-background-color="dark">
-            <a href="<?= $base_path ?>index.php" class="logo">
-                <img src="<?= $assets_path ?>img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20">
-            </a>
-            <div class="nav-toggle">
-                <button class="btn btn-toggle toggle-sidebar">
-                    <i class="gg-menu-right"></i>
-                </button>
-                <button class="btn btn-toggle sidenav-toggler">
-                    <i class="gg-menu-left"></i>
-                </button>
-            </div>
-            <button class="topbar-toggler more">
-                <i class="gg-more-vertical-alt"></i>
+<div class="sidebar-logo">
+    <!-- Logo Header -->
+    <div class="logo-header" data-background-color="dark" style="background-color: #1a2035;">
+        <a href="<?= $base_path ?>index.php" class="logo" style="display: flex; align-items: center; text-decoration: none;">
+            <img src="<?= $assets_path ?>img/logo_taller.png" alt="navbar brand" class="navbar-brand" height="60">
+            <span class="logo-text" style="color: #fff; font-weight: 600; margin-left: 10px; font-size: 1.2rem;">Mecánica Pro</span>
+        </a>
+        <div class="nav-toggle">
+            <button class="btn btn-toggle toggle-sidebar">
+                <i class="gg-menu-right" style="color: #fff;"></i>
+            </button>
+            <button class="btn btn-toggle sidenav-toggler">
+                <i class="gg-menu-left" style="color: #fff;"></i>
             </button>
         </div>
-        <!-- End Logo Header -->
+        <button class="topbar-toggler more">
+            <i class="gg-more-vertical-alt" style="color: #fff;"></i>
+        </button>
     </div>
+    <!-- End Logo Header -->
+</div>
     <div class="sidebar-wrapper scrollbar scrollbar-inner">
         <div class="sidebar-content">
             <ul class="nav nav-secondary">
@@ -241,49 +242,21 @@ $pagina_actual = basename($_SERVER['PHP_SELF']);
 document.addEventListener('DOMContentLoaded', function() {
     const sidebar = document.querySelector('.sidebar');
     const navItems = document.querySelectorAll('.nav-item > a[data-bs-toggle="collapse"]');
-    
-    // Cargar estado guardado
-    function loadMenuState() {
-        const savedState = localStorage.getItem('sidebarState');
-        if (savedState) {
-            const state = JSON.parse(savedState);
-            
-            // Aplicar estado a los menús
-            state.openMenus.forEach(menuId => {
-                const menu = document.querySelector(menuId);
-                if (menu) {
-                    new bootstrap.Collapse(menu, {toggle: true});
-                    const trigger = document.querySelector(`[href="${menuId}"]`);
-                    if (trigger) {
-                        trigger.classList.remove('collapsed');
-                        trigger.setAttribute('aria-expanded', 'true');
-                    }
-                }
-            });
-        }
-    }
-    
-    // Guardar estado
-    function saveMenuState() {
-        const openMenus = Array.from(document.querySelectorAll('.nav-item .collapse.show'))
-            .map(collapse => `#${collapse.id}`);
-        
-        localStorage.setItem('sidebarState', JSON.stringify({
-            openMenus: openMenus
-        }));
-    }
-    
+
     // Inicializar menús
     navItems.forEach(item => {
         item.addEventListener('click', function(e) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const targetId = this.getAttribute('href').substring(1);
+            const target = document.getElementById(targetId);
             
             if (target) {
-                // Alternar el menú actual
-                const bsCollapse = new bootstrap.Collapse(target, {toggle: true});
                 
-                // Actualizar estado visual
+                // Alternar el menú actual
+                const bsCollapse = bootstrap.Collapse.getInstance(target) || new bootstrap.Collapse(target);
+                bsCollapse.toggle();
+                
+                // Actualizar estado visual del trigger
                 if (target.classList.contains('show')) {
                     this.classList.remove('collapsed');
                     this.setAttribute('aria-expanded', 'true');
@@ -291,18 +264,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     this.classList.add('collapsed');
                     this.setAttribute('aria-expanded', 'false');
                 }
-                
-                saveMenuState();
             }
         });
     });
-    
-    // Cargar estado inicial
-    loadMenuState();
-    
+
     // Toggle del sidebar en móviles
     if (document.querySelector('.toggle-sidebar')) {
-        document.querySelector('.toggle-sidebar').addEventListener('click', function() {
+        document.querySelector('.toggle-sidebar').addEventListener('click', function(e) {
+            e.preventDefault();
             sidebar.classList.toggle('show');
         });
     }
