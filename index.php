@@ -46,7 +46,7 @@ $usuario_rol = $_SESSION['usuario_rol'] ?? 'guest';
 </head>
 <body>
     <div class="wrapper">
-        <?php include 'navbar.php'; ?>
+        <?php include 'sidebar.php'; ?>
 
         <div class="main-panel">
             <?php include 'includes/header.php'; ?>

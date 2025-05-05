@@ -5,7 +5,39 @@
 ?>
             </div> <!-- Fin de .container -->
 
-            <?php include '../includes/footer.php'; ?>
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <nav class="pull-left">
+                                <ul class="nav">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="https://navetech.com">NAVETECH</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#">Ayuda</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#">Licencias</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="copyright">
+                                &copy; <?= date('Y') ?>, desarrollado <i class="fa fa-heart text-danger"></i> por
+                                <a href="https://navetech.com">Ing: Esteban Loachamin</a>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div>
+                                Distribuido Por
+                                <a target="_blank" href="https://navetech.com">Nave Tech</a>.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </div> <!-- Fin de .main-panel -->
     </div> <!-- Fin de .wrapper -->
 
@@ -43,5 +75,39 @@
             <?= $inline_script ?>
         </script>
     <?php endif; ?>
+    
+    <!-- Script para inicializar componentes -->
+    <script>
+        // Inicializar Tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+        
+        // Inicializar Popovers
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+            return new bootstrap.Popover(popoverTriggerEl)
+        });
+        
+        // Verificar sesión cada 5 minutos
+        setInterval(function() {
+            fetch('<?= $base_path ?>check_session.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.valid) {
+                        window.location.href = '<?= $base_path ?>login.php?session_expired=1';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking session:', error);
+                });
+        }, 300000);
+    </script>
+
+
+<!-- Incluye el JavaScript de configuración -->
+<script src="<?= $assets_path ?>js/setting-demo.js"></script>
+
 </body>
 </html>
